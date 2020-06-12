@@ -1,47 +1,46 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
-
 using namespace std;
+
 int n, m;
-int arr[9];
-int selected[9];
-int new_arr[9];
-
-
+vector<int> num;
+vector<int> res;
+vector<bool> visited;
 
 void dfs(int cnt) {
-	bool used[10001] = { false, };
+	vector<int> history;
 
 	if (cnt == m) {
-		for (int i = 0; i<m; i++) {
-			cout << new_arr[i] << " ";
+		for (int i = 0; i < m; i++) {
+			cout << res[i] << " ";
 		}
 		cout << "\n";
 		return;
 	}
 
-
-	for (int i = 0; i<n; i++) {
-		if (!selected[i] && !used[arr[i]]) {
-			selected[i] = true;
-			new_arr[cnt++] = arr[i];
-			used[arr[i]] = true;
-			dfs(cnt);
-			cnt--;
-			selected[i] = false;
-		}
+	for (int i = 0; i < n; i++) {
+		if (count(history.begin(), history.end(), num[i]) > 0) continue;
+		if (visited[i]) continue;
+		history.push_back(num[i]);
+		visited[i] = true;
+		res[cnt] = num[i];
+		dfs(cnt + 1);
+		visited[i] = false;
 	}
-
 }
 
 int main() {
 	cin >> n >> m;
-
-	for (int i = 0; i<n; i++) {
-		cin >> arr[i];
+	int input;
+	for (int i = 0; i < n; i++) {
+		cin >> input;
+		num.push_back(input);
+		visited.push_back(false);
+		if (i < m) res.push_back(0);
 	}
-	sort(arr, arr + n);
+	sort(num.begin(), num.end());
+
 	dfs(0);
 
 	return 0;
